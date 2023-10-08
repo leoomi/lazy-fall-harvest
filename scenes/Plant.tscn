@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://bc36pnymlhnc"]
+
+[ext_resource type="Script" path="res://scripts/Plant.gd" id="1_ptnu6"]
+[ext_resource type="Texture2D" uid="uid://dfp1l48jqwsw4" path="res://assets/kenney_pixelPlatformer/Tiles/tile_0124.png" id="2_yn0ef"]
+[ext_resource type="Texture2D" uid="uid://ygjbofnld2ka" path="res://assets/red_arrow.png" id="3_q52i5"]
+[ext_resource type="Texture2D" uid="uid://34q11iwourg4" path="res://assets/double_red_arrow.png" id="4_xhwvk"]
+[ext_resource type="AudioStream" uid="uid://tk3ounq8yx8a" path="res://assets/sounds/Retro Blop 18.wav" id="5_48icx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_81k4w"]
+
+[node name="Plant" type="Node2D"]
+script = ExtResource("1_ptnu6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_yn0ef")
+
+[node name="Hitbox" type="Area2D" parent="."]
+scale = Vector2(0.475, 0.475)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_81k4w")
+
+[node name="Detectors" type="Node2D" parent="."]
+
+[node name="Right" type="Area2D" parent="Detectors"]
+position = Vector2(15, 0)
+scale = Vector2(0.475, 0.475)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detectors/Right"]
+shape = SubResource("CircleShape2D_81k4w")
+
+[node name="Left" type="Area2D" parent="Detectors"]
+position = Vector2(-16, 0)
+scale = Vector2(0.475, 0.475)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detectors/Left"]
+shape = SubResource("CircleShape2D_81k4w")
+
+[node name="RedArrow" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, 17)
+texture = ExtResource("3_q52i5")
+
+[node name="DoubleRedArrow" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(0, 21)
+texture = ExtResource("4_xhwvk")
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_48icx")
+
+[connection signal="area_entered" from="Detectors/Right" to="." method="_on_right_area_entered"]
+[connection signal="area_exited" from="Detectors/Right" to="." method="_on_right_area_exited"]
+[connection signal="area_entered" from="Detectors/Left" to="." method="_on_left_area_entered"]
+[connection signal="area_exited" from="Detectors/Left" to="." method="_on_left_area_exited"]

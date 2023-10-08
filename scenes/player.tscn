@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=3 uid="uid://dxquel0wi4ts3"]
+
+[ext_resource type="Texture2D" uid="uid://r0synqecmh3t" path="res://assets/kenney_pixelPlatformer/Tilemap/characters_packed.png" id="1_kxvfh"]
+[ext_resource type="Script" path="res://scripts/player/Player.gd" id="1_mdhb8"]
+[ext_resource type="AudioStream" uid="uid://dhsokoaot6rvk" path="res://assets/sounds/Retro Jump Classic 08.wav" id="3_l0164"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ce7jm"]
+size = Vector2(20.5, 23)
+
+[sub_resource type="Animation" id="Animation_dj1yu"]
+resource_name = "Idle"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_podal"]
+resource_name = "Walking"
+length = 0.25
+loop_mode = 1
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.125),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [1, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nl5mm"]
+_data = {
+"Idle": SubResource("Animation_dj1yu"),
+"Walking": SubResource("Animation_podal")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8bww8"]
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_mdhb8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.25, 1)
+shape = SubResource("RectangleShape2D_ce7jm")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_kxvfh")
+flip_h = true
+hframes = 9
+vframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Walking"
+libraries = {
+"": SubResource("AnimationLibrary_nl5mm")
+}
+
+[node name="PlotHitbox" type="Area2D" parent="."]
+scale = Vector2(0.32, 0.32)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlotHitbox"]
+shape = SubResource("RectangleShape2D_8bww8")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_l0164")
+volume_db = -15.0
+
+[connection signal="area_entered" from="PlotHitbox" to="." method="_on_plot_hitbox_area_entered"]
+[connection signal="area_exited" from="PlotHitbox" to="." method="_on_plot_hitbox_area_exited"]

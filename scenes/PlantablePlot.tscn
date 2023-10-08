@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://dvrmlky2rqv0c"]
+
+[ext_resource type="Texture2D" uid="uid://ceodhqlfdo0vv" path="res://assets/kenney_pixelPlatformer/Tiles/tile_0062.png" id="1_6iwhi"]
+[ext_resource type="Script" path="res://scripts/PlantablePlot.gd" id="1_8n8hj"]
+[ext_resource type="PackedScene" uid="uid://bc36pnymlhnc" path="res://scenes/Plant.tscn" id="4_4bf7u"]
+[ext_resource type="PackedScene" uid="uid://dvjpkl6vbqdqw" path="res://scenes/Arrow.tscn" id="4_mvgpc"]
+[ext_resource type="AudioStream" uid="uid://bep0gvx7xrkd8" path="res://assets/sounds/Retro FootStep Grass 01.wav" id="5_v78fh"]
+[ext_resource type="AudioStream" uid="uid://cr2n60xty87p7" path="res://assets/sounds/Retro Event Acute 11.wav" id="6_fwfkb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k1alr"]
+
+[node name="PlantablePlot" type="Node2D" node_paths=PackedStringArray("text_label", "plant_transform")]
+script = ExtResource("1_8n8hj")
+text_label = NodePath("Text")
+texture_path = "res://assets/kenney_pixelPlatformer/Text/"
+plant_transform = NodePath("PlantTransform")
+plant_scene = ExtResource("4_4bf7u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_6iwhi")
+
+[node name="Arrow" parent="." instance=ExtResource("4_mvgpc")]
+
+[node name="Text" type="RichTextLabel" parent="."]
+visible = false
+texture_filter = 1
+clip_contents = false
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = -29.0
+offset_top = -60.0
+offset_right = 25.0
+offset_bottom = -12.0
+grow_horizontal = 2
+bbcode_enabled = true
+text = "[img]res://assets/kenney_pixelPlatformer/Text/-.png[/img][img]res://assets/kenney_pixelPlatformer/Text/5.png[/img][img]res://assets/kenney_pixelPlatformer/Text/0.png[/img][img]res://assets/kenney_pixelPlatformer/Text/coin.png[/img]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="PlayerDetector" type="Area2D" parent="."]
+position = Vector2(0, -18)
+scale = Vector2(0.31, 0.31)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource("CircleShape2D_k1alr")
+
+[node name="PlantTransform" type="Node2D" parent="."]
+position = Vector2(0, -18)
+
+[node name="PlantingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_v78fh")
+
+[node name="HarvestSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_fwfkb")
+
+[connection signal="area_entered" from="PlayerDetector" to="." method="_on_player_detector_area_entered"]
+[connection signal="area_exited" from="PlayerDetector" to="." method="_on_player_detector_area_exited"]
